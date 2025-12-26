@@ -14,7 +14,13 @@ importers:
       dotenv:
         specifier: ^17.2.3
         version: 17.2.3
+      jsonwebtoken:
+        specifier: ^9.0.3
+        version: 9.0.3
     devDependencies:
+      '@types/jsonwebtoken':
+        specifier: ^9.0.10
+        version: 9.0.10
       '@types/node':
         specifier: ^25.0.3
         version: 25.0.3
@@ -185,6 +191,12 @@ packages:
 
   '@fireblocks/ts-sdk@13.0.0':
     resolution: {integrity: sha512-a4Lugpv32dUYJ8fMRM41qg45qAfCLXWoHSPJBHeC1xpJqXDsK+R6ypaVSCzvhOuqNTbGJbIo78JetvcQ572f7A==}
+
+  '@types/jsonwebtoken@9.0.10':
+    resolution: {integrity: sha512-asx5hIG9Qmf/1oStypjanR7iKTv0gXQ1Ov/jfrX6kS/EO0OFni8orbmGCn0672NHR3kXHwpAwR+B368ZGN/2rA==}
+
+  '@types/ms@2.1.0':
+    resolution: {integrity: sha512-GsCCIZDE/p3i96vtEqx+7dBUGXrc7zeSK3wwPHIaRThS+9OhWIXRqzs4d6k1SVU8g91DrNRWxWUGhp5KXQb2VA==}
 
   '@types/node@25.0.3':
     resolution: {integrity: sha512-W609buLVRVmeW693xKfzHeIV6nJGGz98uCPfeXI1ELMLXVeKYZ9m15fAMSaUPBHYLGFsVRcMmSCksQOrZV9BYA==}
@@ -458,6 +470,13 @@ snapshots:
       uuid: 8.3.2
     transitivePeerDependencies:
       - debug
+
+  '@types/jsonwebtoken@9.0.10':
+    dependencies:
+      '@types/ms': 2.1.0
+      '@types/node': 25.0.3
+
+  '@types/ms@2.1.0': {}
 
   '@types/node@25.0.3':
     dependencies:
