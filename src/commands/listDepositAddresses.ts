@@ -3,11 +3,12 @@ import { getFireblocks } from "../lib/fireblocks";
 async function main() {
   const fireblocks = getFireblocks();
 
-  const vaultAccountId = process.argv[2];
-  const assetId = process.argv[3];
+  // Accept both: `pnpm run list:deposit 0 ETH` and `pnpm run list:deposit -- 0 ETH`
+  const args = process.argv.slice(2).filter((a) => a !== "--");
+  const [vaultAccountId, assetId] = args;
 
   if (!vaultAccountId || !assetId) {
-    throw new Error("Usage: pnpm run list:deposit -- <vaultAccountId> <assetId>");
+    throw new Error("Usage: pnpm run list:deposit <vaultAccountId> <assetId>");
   }
 
   const res = await fireblocks.vaults.getVaultAccountAssetAddressesPaginated({
