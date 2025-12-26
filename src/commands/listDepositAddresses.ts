@@ -10,13 +10,10 @@ async function main() {
     throw new Error("Usage: pnpm run list:deposit -- <vaultAccountId> <assetId>");
   }
 
-  // SDK v13 method name:
   const res = await fireblocks.vaults.getVaultAccountAssetAddressesPaginated({
     vaultAccountId,
     assetId,
     limit: 50,
-    // after: undefined, // optionally use for pagination
-    // before: undefined,
   });
 
   console.log(JSON.stringify(res.data, null, 2));
