@@ -1,104 +1,89 @@
-import { getFireblocks } from "../lib/fireblocks";
 
-type Args = {
+import { getFireblocks } from "../lib/fireblocks";
+import { parseArgs, usage } from "../lib/cli.ts";
+import { deepTruncate, printJson } from "../lib/output";
+
+type ParsedFlags = {
+  asset?: string;
   limit: number;
-  status?: string;
   raw: boolean;
 };
 
-function parseArgs(argv: string[]): Args {
-  const tokens = argv.slice(2).filter((a) => a !== "--");
-  const raw = tokens.includes("--raw");
-  const cleaned = tokens.filter((t) => t !== "--raw");
+function parseFlags(): ParsedFlags {
+  const { raw, positional } = parseArgs();
 
-  const [limitRaw, status] = cleaned;
-  const limit = limitRaw ? Number(limitRaw) : 25;
+  let asset: string | undefined;
+  let limit = 10;
 
-  if (!Number.isFinite(limit) || limit <= 0) {
-    throw new Error(
-      [
-        "Usage:",
-        "  pnpm run tx:list -- [limit] [status] [--raw]",
-        "",
-        "Examples:",
-        "  pnpm run tx:list",
-        "  pnpm run tx:list -- 10",
-        "  pnpm run tx:list -- 25 COMPLETED",
-        "  pnpm run tx:list -- 25 COMPLETED --raw",
-      ].join("\n")
-    );
+  const args = [...positional];
+
+  const takeValue = (flag: string) => {
+    const idx = args.indexOf(flag);
+    if (idx === -1) return undefined;
+    const val = args[idx + 1];
+    args.splice(idx, 2);
+    return val;
+  };
+
+  const assetFlag = takeValue("--asset");
+  if (assetFlag) asset = assetFlag;
+
+  const limitFlag = takeValue("--limit");
+  if (limitFlag) {
+    const n = Number(limitFlag);
+    if (!Number.isFinite(n) || n <= 0) usage("Usage: pnpm run tx:list -- [--asset <ASSET>] [--limit <N>] [--raw]");
+    limit = Math.floor(n);
   }
 
-  return { limit, status, raw };
-}
-
-function unwrap(res: any): any {
-  return res?.data ?? res;
-}
-
-function truncateHex(value: unknown, keep = 18): unknown {
-  if (typeof value !== "string") return value;
-  if (!value.startsWith("0x")) return value;
-
-  const minLen = keep * 2 + 2;
-  if (value.length <= minLen) return value;
-
-  return `${value.slice(0, keep + 2)}…${value.slice(-keep)} (len=${value.length})`;
-}
-
-function compactTx(tx: any): any {
-  if (!tx || typeof tx !== "object") return tx;
-  const out = { ...tx };
-
-  if (typeof out.contractCallData === "string") {
-    out.contractCallData = truncateHex(out.contractCallData);
+  if (!asset && args[0] && !args[0].startsWith("--")) asset = args[0];
+  if (args[1] && !args[1].startsWith("--")) {
+    const n = Number(args[1]);
+    if (Number.isFinite(n) && n > 0) limit = Math.floor(n);
   }
 
-  if (out.extraParameters && typeof out.extraParameters === "object") {
-    const ep = { ...out.extraParameters };
-    if (typeof ep.contractCallData === "string") {
-      ep.contractCallData = truncateHex(ep.contractCallData);
-    }
-    out.extraParameters = ep;
-  }
-
-  if (Array.isArray(out.signedMessages)) {
-    out.signedMessages = out.signedMessages.map((m: any) => ({
-      ...m,
-      content: truncateHex(m?.content),
-    }));
-  }
-
-  return out;
-}
-
-function compactPayload(payload: any): any {
-  if (Array.isArray(payload)) return payload.map(compactTx);
-
-  if (payload && typeof payload === "object") {
-    if (Array.isArray(payload.transactions)) {
-      return { ...payload, transactions: payload.transactions.map(compactTx) };
-    }
-    if (Array.isArray(payload.data)) {
-      return { ...payload, data: payload.data.map(compactTx) };
-    }
-    return compactTx(payload);
-  }
-
-  return payload;
+  return { asset, limit, raw };
 }
 
 async function main() {
   const fireblocks = getFireblocks();
-  const { limit, status, raw } = parseArgs(process.argv);
+  const { asset, limit, raw } = parseFlags();
 
-  const res = await (fireblocks as any).transactions.getTransactions({
+  const res = await fireblocks.transactions.getTransactions({
     limit,
-    ...(status ? { status } : {}),
+    ...(asset ? { assetId: asset } : {}),
   });
 
-  const data = unwrap(res);
-  console.log(JSON.stringify(raw ? data : compactPayload(data), null, 2));
+  if (raw) {
+    printJson(res.data);
+    return;
+  }
+
+  const items = (res.data as any[]) ?? [];
+  const cleaned = items.map((tx) => ({
+    id: tx.id,
+    createdAt: tx.createdAt,
+    lastUpdated: tx.lastUpdated,
+    assetId: tx.assetId,
+    operation: tx.operation,
+    status: tx.status,
+    subStatus: tx.subStatus,
+    amount: tx.amount,
+    fee: tx.fee ?? tx.networkFee,
+    source: tx.source
+      ? { id: tx.source.id, type: tx.source.type, name: tx.source.name }
+      : undefined,
+    destination: tx.destination
+      ? { id: tx.destination.id, type: tx.destination.type, name: tx.destination.name }
+      : undefined,
+    txHash: tx.txHash,
+    extraParameters: deepTruncate(tx.extraParameters, 160),
+  }));
+
+  printJson({
+    count: cleaned.length,
+    filters: { ...(asset ? { assetId: asset } : {}), limit },
+    transactions: cleaned,
+  });
 }
 
 main().catch((e: any) => {
