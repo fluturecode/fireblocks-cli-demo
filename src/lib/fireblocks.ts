@@ -12,7 +12,6 @@ export function getFireblocks() {
   if (!secretPathRaw) throw new Error("Missing FIREBLOCKS_SECRET_PATH in .env");
   if (!baseHostRaw) throw new Error("Missing FIREBLOCKS_BASE_PATH in .env");
 
-  // Make secret path work from any working directory
   const secretPath = path.resolve(process.cwd(), secretPathRaw);
 
   if (!existsSync(secretPath)) {
@@ -21,7 +20,6 @@ export function getFireblocks() {
 
   const secretKey = readFileSync(secretPath, "utf8");
 
-  // Repo standard: env holds host only; code appends /v1
   const baseHost = baseHostRaw.replace(/\/+$/, "");
   const basePath = baseHost.endsWith("/v1") ? baseHost : `${baseHost}/v1`;
 

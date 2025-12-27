@@ -1,6 +1,7 @@
 import { getFireblocks } from "../lib/fireblocks";
 import { parseArgs, usage } from "../lib/cli";
 import { printJson } from "../lib/output";
+import crypto from "node:crypto";
 
 type Inputs = {
   fromVaultId: string;
@@ -30,12 +31,12 @@ function parseInputs(): Inputs {
     usage(
       [
         "Usage:",
-        "  pnpm run tx:create -- <fromVaultId> <toVaultId> <assetId> <amount> [--note \"...\"] [--raw]",
+        '  pnpm run tx:create -- <fromVaultId> <toVaultId> <assetId> <amount> [--note "..."]',
         "",
         "Examples:",
-        "  pnpm run tx:create -- 4 0 SOL 0.01 --note \"demo sol transfer\"",
-        "  pnpm run tx:create -- 4 0 ETH 0.0001 --note \"demo eth transfer\"",
-        "  pnpm run tx:create -- 4 0 MATIC_POLYGON 0.1 --note \"demo polygon transfer\"",
+        '  pnpm run tx:create -- 4 0 SOL 0.01 --note "demo sol transfer"',
+        '  pnpm run tx:create -- 4 0 ETH 0.0001 --note "demo eth transfer"',
+        '  pnpm run tx:create -- 4 0 MATIC_POLYGON 0.1 --note "demo polygon transfer"',
       ].join("\n")
     );
   }
@@ -50,20 +51,21 @@ function parseInputs(): Inputs {
 
 async function main() {
   const fireblocks = getFireblocks();
-  const { fromVaultId, toVaultId, assetId, amount, note, raw } = parseInputs();
+  const { fromVaultId, toVaultId, assetId, amount, note } = parseInputs();
 
   const res = await fireblocks.transactions.createTransaction({
     transactionRequest: {
       assetId,
-      amount, // keep as string to avoid float precision issues
+      amount,
       operation: "TRANSFER",
       source: { type: "VAULT_ACCOUNT", id: fromVaultId },
       destination: { type: "VAULT_ACCOUNT", id: toVaultId },
       ...(note ? { note } : {}),
     },
+    idempotencyKey: crypto.randomUUID(),
   });
 
-  printJson(raw ? res.data : res.data);
+  printJson(res.data);
 }
 
 main().catch((e: any) => {

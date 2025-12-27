@@ -10,8 +10,10 @@
     "list:vaults": "tsx src/commands/listVaults.ts",
     "create:vault": "tsx src/commands/createVault.ts",
     "create:deposit": "tsx src/commands/createDepositAddress.ts",
+    "tx:create": "tsx src/commands/createTransfer.ts",
     "tx:list": "tsx src/commands/listTransactions.ts",
-    "tx:get": "tsx src/commands/getTransaction.ts"
+    "tx:get": "tsx src/commands/getTransaction.ts",
+    "tx:poll": "tsx src/commands/pollTransaction.ts"
   },
   "keywords": [],
   "author": "",
