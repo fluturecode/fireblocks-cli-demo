@@ -54,6 +54,14 @@ function compactTx(tx: any): any {
     out.contractCallData = truncateHex(out.contractCallData);
   }
 
+  if (out.extraParameters && typeof out.extraParameters === "object") {
+    const ep = { ...out.extraParameters };
+    if (typeof ep.contractCallData === "string") {
+      ep.contractCallData = truncateHex(ep.contractCallData);
+    }
+    out.extraParameters = ep;
+  }
+
   if (Array.isArray(out.signedMessages)) {
     out.signedMessages = out.signedMessages.map((m: any) => ({
       ...m,
@@ -90,7 +98,6 @@ async function main() {
   });
 
   const data = unwrap(res);
-
   console.log(JSON.stringify(raw ? data : compactPayload(data), null, 2));
 }
 
