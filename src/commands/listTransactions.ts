@@ -32,6 +32,10 @@ function parseArgs(argv: string[]): Args {
   return { limit, status, raw };
 }
 
+function unwrap(res: any): any {
+  return res?.data ?? res;
+}
+
 function truncateHex(value: unknown, keep = 18): unknown {
   if (typeof value !== "string") return value;
   if (!value.startsWith("0x")) return value;
@@ -44,7 +48,6 @@ function truncateHex(value: unknown, keep = 18): unknown {
 
 function compactTx(tx: any): any {
   if (!tx || typeof tx !== "object") return tx;
-
   const out = { ...tx };
 
   if (typeof out.contractCallData === "string") {
@@ -61,27 +64,16 @@ function compactTx(tx: any): any {
   return out;
 }
 
-function unwrap(res: any): any {
-  return res?.data ?? res;
-}
-
-function compactTransactionsPayload(payload: any): any {
-  if (Array.isArray(payload)) {
-    return payload.map(compactTx);
-  }
+function compactPayload(payload: any): any {
+  if (Array.isArray(payload)) return payload.map(compactTx);
 
   if (payload && typeof payload === "object") {
-    // Common SDK shape: { transactions: [...], paging: {...} }
     if (Array.isArray(payload.transactions)) {
       return { ...payload, transactions: payload.transactions.map(compactTx) };
     }
-
-    // Some APIs return { data: [...] }
     if (Array.isArray(payload.data)) {
       return { ...payload, data: payload.data.map(compactTx) };
     }
-
-    // Fallback: compact object itself
     return compactTx(payload);
   }
 
@@ -99,13 +91,7 @@ async function main() {
 
   const data = unwrap(res);
 
-  if (raw) {
-    console.log(JSON.stringify(data, null, 2));
-    return;
-  }
-
-  const compacted = compactTransactionsPayload(data);
-  console.log(JSON.stringify(compacted, null, 2));
+  console.log(JSON.stringify(raw ? data : compactPayload(data), null, 2));
 }
 
 main().catch((e: any) => {
