@@ -13,19 +13,17 @@ export function getFireblocks() {
   if (!baseHostRaw) throw new Error("Missing FIREBLOCKS_BASE_PATH in .env");
 
   const secretPath = path.resolve(process.cwd(), secretPathRaw);
+  if (!existsSync(secretPath)) throw new Error(`Secret key not found at: ${secretPath}`);
 
-  if (!existsSync(secretPath)) {
-    throw new Error(`Secret key not found at: ${secretPath}`);
+  const secretKey = readFileSync(secretPath, "utf8").trim();
+  if (!/BEGIN .*PRIVATE KEY/.test(secretKey)) {
+    throw new Error(
+      `Secret key file does not look like a private key PEM. Check FIREBLOCKS_SECRET_PATH: ${secretPath}`
+    );
   }
-
-  const secretKey = readFileSync(secretPath, "utf8");
 
   const baseHost = baseHostRaw.replace(/\/+$/, "");
   const basePath = baseHost.endsWith("/v1") ? baseHost : `${baseHost}/v1`;
 
-  return new Fireblocks({
-    apiKey,
-    secretKey,
-    basePath,
-  });
+  return new Fireblocks({ apiKey, secretKey, basePath });
 }
