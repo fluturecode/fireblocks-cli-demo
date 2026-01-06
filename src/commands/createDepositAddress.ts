@@ -1,30 +1,51 @@
 import { getFireblocks } from "../lib/fireblocks";
+import { parseArgs, usage } from "../lib/cli";
+import { printJson } from "../lib/output";
 
 async function main() {
-  const fireblocks = getFireblocks();   
+  const fireblocks = getFireblocks();
+  const { raw, positional } = parseArgs();
 
-  // Accept both: `pnpm run list:deposit 0 ETH` and `pnpm run list:deposit -- 0 ETH`
-  const args = process.argv.slice(2).filter((a) => a !== "--");
-  const [vaultAccountId, assetId] = args;
+  const [vaultAccountId, assetId] = positional;
 
   if (!vaultAccountId || !assetId) {
-    throw new Error("Usage: pnpm run list:deposit <vaultAccountId> <assetId>");
+    usage(
+      [
+        "Usage:",
+        "  pnpm run create:deposit -- <vaultAccountId> <assetId> [--raw]",
+        "",
+        "Examples:",
+        "  pnpm run create:deposit -- 0 ETH",
+        "  pnpm run create:deposit -- 0 SOL",
+        "  pnpm run create:deposit -- 0 MATIC_POLYGON",
+      ].join("\n")
+    );
   }
-  // Helpful when debugging CLI issues:
-  // console.log(`Listing deposit addresses for vault=${vaultAccountId} asset=${assetId}`);
 
-  const res = await fireblocks.vaults.getVaultAccountAssetAddressesPaginated({
+  const res = await fireblocks.vaults.createVaultAccountAssetAddress({
     vaultAccountId,
     assetId,
-    limit: 50,
-    // after: undefined, // optionally use for pagination
-    // before: undefined,
+    // createAddressRequest is optional for many assets; keep minimal for demo
   });
 
-  console.log(JSON.stringify(res.data, null, 2));
+  printJson(res.data, raw ? undefined : { truncate: true });
 }
 
 main().catch((e: any) => {
-  console.error("Error:", e?.response?.data ?? e);
+  const data = e?.response?.data ?? e;
+
+  if (data?.code === 1010) {
+    console.error(
+      [
+        "Error: Creating deposit addresses is not supported for this asset in this workspace (code 1010).",
+        "Try one of these instead:",
+        "  1) List existing addresses: pnpm run list:deposit -- <vaultId> <assetId>",
+        "  2) Create the address in Fireblocks Console UI, then re-run list:deposit",
+      ].join("\n")
+    );
+    process.exit(1);
+  }
+
+  console.error("Error:", data);
   process.exit(1);
 });
