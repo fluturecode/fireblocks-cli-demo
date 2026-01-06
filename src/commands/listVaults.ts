@@ -1,10 +1,21 @@
 import { getFireblocks } from "../lib/fireblocks";
+import { parseArgs, usage } from "../lib/cli";
+import { printJson } from "../lib/output";
 
 async function main() {
   const fireblocks = getFireblocks();
+  const { raw, flags } = parseArgs();
 
-  const res = await fireblocks.vaults.getPagedVaultAccounts({ limit: 50 });
-  console.log(JSON.stringify(res.data, null, 2));
+  const limit =
+    typeof flags.limit === "string" ? Number(flags.limit) : 50;
+
+  if (!Number.isFinite(limit) || limit <= 0) {
+    usage("Invalid --limit. Example: --limit 50");
+  }
+
+  const res = await fireblocks.vaults.getPagedVaultAccounts({ limit });
+
+  printJson(res.data);
 }
 
 main().catch((e: any) => {
