@@ -1,13 +1,42 @@
 export type ParsedArgs = {
   raw: boolean;
   positional: string[];
+  flags: Record<string, string | boolean>;
 };
 
 export function parseArgs(argv = process.argv.slice(2)): ParsedArgs {
-  const filtered = argv.filter((a) => a !== "--");
-  const raw = filtered.includes("--raw");
-  const positional = filtered.filter((a) => a !== "--raw");
-  return { raw, positional };
+  const args = argv.filter((a) => a !== "--");
+
+  const flags: Record<string, string | boolean> = {};
+  const positional: string[] = [];
+
+  for (let i = 0; i < args.length; i++) {
+    const a = args[i];
+
+    if (!a.startsWith("--")) {
+      positional.push(a);
+      continue;
+    }
+
+    if (a === "--raw") {
+      flags.raw = true;
+      continue;
+    }
+
+    const key = a.slice(2);
+    const next = args[i + 1];
+
+    if (!next || next.startsWith("--")) {
+      flags[key] = true;
+      continue;
+    }
+
+    flags[key] = next;
+    i++;
+  }
+
+  const raw = flags.raw === true;
+  return { raw, positional, flags };
 }
 
 export function usage(message: string): never {
