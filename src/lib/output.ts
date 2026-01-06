@@ -16,6 +16,12 @@ export function deepTruncate(value: any, maxStringLen = 160): any {
   return truncateString(value, maxStringLen);
 }
 
-export function printJson(data: unknown) {
-  console.log(JSON.stringify(data, null, 2));
-}
+export function printJson(
+  data: unknown,
+  opts?: { truncate?: boolean; maxStringLen?: number }
+) {
+  const truncate = opts?.truncate ?? false;
+  const maxStringLen = opts?.maxStringLen ?? 160;
+  const out = truncate ? deepTruncate(data, maxStringLen) : data;
+  console.log(JSON.stringify(out, null, 2));
+} 
