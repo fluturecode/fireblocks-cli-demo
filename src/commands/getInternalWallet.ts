@@ -9,9 +9,7 @@ type Inputs = {
 
 function parseInputs(): Inputs {
   const { raw, positional } = parseArgs();
-  const args = [...positional];
-
-  const [walletId] = args;
+  const [walletId] = [...positional];
 
   if (!walletId) {
     usage(
@@ -36,7 +34,6 @@ function summarize(w: any) {
   return {
     id: w.id,
     name: w.name,
-    // some workspaces expose address/tag/assetId depending on wallet type
     address: w.address,
     tag: w.tag,
     assetId: w.assetId,
@@ -48,8 +45,7 @@ async function main() {
   const fireblocks = getFireblocks();
   const { walletId, raw } = parseInputs();
 
-  // per your SDK typings: getInternalWallet(walletId, options?)
-  const res = await fireblocks.internalWallets.getInternalWallet(walletId);
+  const res = await fireblocks.internalWallets.getInternalWallet({walletId});
 
   if (raw) {
     printJson(res.data);
