@@ -18,7 +18,11 @@
     "tx:poll": "tsx src/commands/pollTransaction.ts",
     "wallets:external:list": "tsx src/commands/listExternalWallets.ts",
     "wallets:internal:get": "tsx src/commands/getInternalWallet.ts",
-    "wallets:internal:list": "tsx src/commands/listInternalWallets.ts"
+    "wallets:internal:list": "tsx src/commands/listInternalWallets.ts",
+    "assist:transfer": "tsx src/commands/advanced/transferAssist.ts",
+    "evm:contractCall": "tsx src/commands/advanced/contractCall.ts",
+    "raw:sign": "tsx src/commands/advanced/rawSigning.ts"
+
   },
   "keywords": [],
   "author": "",
