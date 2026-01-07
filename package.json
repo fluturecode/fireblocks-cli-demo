@@ -16,6 +16,7 @@
     "tx:list": "tsx src/commands/listTransactions.ts",
     "tx:get": "tsx src/commands/getTransaction.ts",
     "tx:poll": "tsx src/commands/pollTransaction.ts",
+    "wallets:internal:get": "tsx src/commands/getInternalWallet.ts",
     "wallets:internal:list": "tsx src/commands/listInternalWallets.ts"
   },
   "keywords": [],

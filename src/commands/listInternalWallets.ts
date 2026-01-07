@@ -51,7 +51,6 @@ function summarize(w: any) {
   return {
     id: w.id,
     name: w.name,
-    // these vary by workspace + wallet type, so keep flexible
     address: w.address,
     tag: w.tag,
     assetId: w.assetId,
@@ -62,7 +61,6 @@ async function main() {
   const fireblocks = getFireblocks();
   const { assetId, limit, raw } = parseInputs();
 
-  // per your SDK typings screenshot: getInternalWallets(options?)
   const res = await fireblocks.internalWallets.getInternalWallets();
 
   const wallets = (res.data as any)?.internalWallets ?? (res.data as any) ?? [];
