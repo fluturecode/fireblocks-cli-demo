@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "tsx src/hello.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "iw:list": "tsx src/commands/listInternalWallets.ts",
+    "iw:get": "tsx src/commands/getInternalWallet.ts",
     "list:deposit": "tsx src/commands/listDepositAddresses.ts",
     "list:vaults": "tsx src/commands/listVaults.ts",
     "create:vault": "tsx src/commands/createVault.ts",
@@ -13,7 +15,8 @@
     "tx:create": "tsx src/commands/createTransfer.ts",
     "tx:list": "tsx src/commands/listTransactions.ts",
     "tx:get": "tsx src/commands/getTransaction.ts",
-    "tx:poll": "tsx src/commands/pollTransaction.ts"
+    "tx:poll": "tsx src/commands/pollTransaction.ts",
+    "wallets:internal:list": "tsx src/commands/listInternalWallets.ts"
   },
   "keywords": [],
   "author": "",
