@@ -71,10 +71,8 @@ async function main() {
     const status = tx?.status ?? "UNKNOWN";
     const subStatus = tx?.subStatus ?? "";
 
-    // Print a one-line progress update (demo-friendly)
     console.log(`${new Date().toISOString()}  ${txId}  ${status}${subStatus ? ` (${subStatus})` : ""}`);
 
-    // Terminal states worth stopping on
     const done = ["COMPLETED", "FAILED", "CANCELLED", "REJECTED", "BLOCKED"].includes(status);
     if (done) {
       console.log("\nFinal transaction:");
