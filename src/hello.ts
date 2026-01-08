@@ -10,9 +10,7 @@ if (!apiKey) throw new Error('Missing FIREBLOCKS_API_KEY in .env');
 if (!secretPath) throw new Error('Missing FIREBLOCKS_SECRET_PATH in .env');
 if (!existsSync(secretPath)) throw new Error(`Secret key not found at: ${secretPath}`);
 
-// Choose basePath:
-// - easiest: use BasePath.Sandbox for sandbox
-// - or set FIREBLOCKS_BASE_PATH to the full /v1 URL
+
 const basePath =
   basePathEnv?.includes('sandbox') ? BasePath.Sandbox : (basePathEnv as any);
 
