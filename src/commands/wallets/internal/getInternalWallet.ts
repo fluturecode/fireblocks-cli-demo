@@ -1,6 +1,6 @@
-import { getFireblocks } from "../lib/fireblocks";
-import { parseArgs, usage } from "../lib/cli";
-import { printJson } from "../lib/output";
+import { getFireblocks } from "@/lib/fireblocks";
+import { parseArgs, usage } from "@/lib/cli";
+import { printJson } from "@/lib/output";
 
 type Inputs = {
   walletId: string;

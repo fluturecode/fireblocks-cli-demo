@@ -6,23 +6,25 @@
   "scripts": {
     "dev": "tsx src/hello.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "iw:list": "tsx src/commands/listInternalWallets.ts",
-    "iw:get": "tsx src/commands/getInternalWallet.ts",
-    "list:deposit": "tsx src/commands/listDepositAddresses.ts",
-    "list:vaults": "tsx src/commands/listVaults.ts",
-    "create:vault": "tsx src/commands/createVault.ts",
-    "create:deposit": "tsx src/commands/createDepositAddress.ts",
-    "tx:create": "tsx src/commands/createTransfer.ts",
-    "tx:list": "tsx src/commands/listTransactions.ts",
-    "tx:get": "tsx src/commands/getTransaction.ts",
-    "tx:poll": "tsx src/commands/pollTransaction.ts",
-    "wallets:external:list": "tsx src/commands/listExternalWallets.ts",
-    "wallets:internal:get": "tsx src/commands/getInternalWallet.ts",
-    "wallets:internal:list": "tsx src/commands/listInternalWallets.ts",
-    "assist:transfer": "tsx src/commands/advanced/transferAssist.ts",
-    "evm:contractCall": "tsx src/commands/advanced/contractCall.ts",
-    "raw:sign": "tsx src/commands/advanced/rawSigning.ts"
 
+    "vault:list": "tsx src/commands/vaults/listVaults.ts",
+    "vault:create": "tsx src/commands/vaults/createVault.ts",
+
+    "deposit:list": "tsx src/commands/vaults/listDepositAddresses.ts",
+    "deposit:create": "tsx src/commands/vaults/createDepositAddress.ts",
+
+    "wallets:internal:list": "tsx src/commands/wallets/internal/listInternalWallets.ts",
+    "wallets:internal:get": "tsx src/commands/wallets/internal/getInternalWallet.ts",
+    "wallets:external:list": "tsx src/commands/wallets/external/listExternalWallets.ts",
+
+    "tx:create": "tsx src/commands/transactions/createTransfer.ts",
+    "tx:list": "tsx src/commands/transactions/listTransactions.ts",
+    "tx:get": "tsx src/commands/transactions/getTransaction.ts",
+    "tx:poll": "tsx src/commands/transactions/pollTransaction.ts",
+
+    "advanced:assist:transfer": "tsx src/commands/advanced/transferAssist.ts",
+    "advanced:evm:contractCall": "tsx src/commands/advanced/contractCall.ts",
+    "advanced:raw:sign": "tsx src/commands/advanced/rawSigning.ts"
   },
   "keywords": [],
   "author": "",

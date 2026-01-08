@@ -1,7 +1,7 @@
 
-import { getFireblocks } from "../lib/fireblocks";
-import { parseArgs, usage } from "../lib/cli.ts";
-import { deepTruncate, printJson } from "../lib/output";
+import { getFireblocks } from "@/lib/fireblocks.js";
+import { parseArgs, usage } from "@/lib/cli.js";
+import { deepTruncate, printJson } from "@/lib/output";
 
 type ParsedFlags = {
   asset?: string;

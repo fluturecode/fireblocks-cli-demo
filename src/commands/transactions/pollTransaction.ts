@@ -1,6 +1,6 @@
-import { getFireblocks } from "../lib/fireblocks";
-import { parseArgs, usage } from "../lib/cli";
-import { printJson } from "../lib/output";
+import { getFireblocks } from "@/lib/fireblocks";
+import { parseArgs, usage } from "@/lib/cli";
+import { printJson } from "@/lib/output";
 
 function sleep(ms: number) {
   return new Promise((r) => setTimeout(r, ms));

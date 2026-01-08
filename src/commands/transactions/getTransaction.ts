@@ -1,4 +1,4 @@
-import { getFireblocks } from "../lib/fireblocks";
+import { getFireblocks } from "@/lib/fireblocks";
 
 type Args = {
   txId: string;

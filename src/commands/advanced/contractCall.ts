@@ -1,6 +1,6 @@
-import { getFireblocks } from "../../lib/fireblocks";
-import { parseArgs, usage } from "../../lib/cli";
-import { deepTruncate, printJson } from "../../lib/output";
+import { getFireblocks } from "@/lib/fireblocks";
+import { parseArgs, usage } from "@/lib/cli";
+import { deepTruncate, printJson } from "@/lib/output";
 
 type Inputs = {
   vaultId: string;
