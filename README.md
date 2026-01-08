@@ -1,14 +1,43 @@
 # Fireblocks TypeScript Demo (SDK + REST)
 
-A clean, opinionated TypeScript demo project for interacting with the **Fireblocks API**
-using the **Fireblocks TypeScript SDK**, with optional **raw REST/JWT** tooling for learning
-and debugging.
+A clean, opinionated **TypeScript demo project** for interacting with the **Fireblocks platform**
+using the official **Fireblocks TypeScript SDK**.
 
-This project is designed to be:
-- Beginner-friendly
-- Console-aligned
-- SDK-first (REST explained, not required)
-- Easy to extend
+This repository is designed as a **practical starting point** for developers new to Fireblocks,
+with a structure that mirrors real workflows in the Fireblocks Console.
+
+All core functionality is **SDK-first**.  
+Optional **raw REST + JWT tooling** is included only to explain authentication mechanics and
+support learning or debugging with tools like Postman.
+
+---
+
+## Key Concepts
+
+- **SDK-first**  
+  Uses `@fireblocks/ts-sdk` for all standard operations. No manual JWT handling required.
+
+- **Console-aligned**  
+  Commands map directly to Fireblocks Console concepts:
+  vaults, wallets, deposit addresses, and transactions.
+
+- **REST explained, not required**  
+  Raw REST examples exist only to demonstrate how Fireblocks authentication works under the hood.
+
+- **Beginner-friendly, production-aware**  
+  Minimal abstractions, clear CLI commands, and strong typing throughout.
+
+---
+
+## SDK vs REST
+
+Fireblocks exposes a single REST API, but SDKs simplify and secure access.
+
+This project uses the **TypeScript SDK** for all normal usage.  
+Raw REST access is included **only for educational purposes**.
+
+> **Building an app? Use the SDK.**  
+> **Learning how Fireblocks works? Explore the REST examples.**
 
 ---
 
